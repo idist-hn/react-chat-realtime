@@ -36,4 +36,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getAvatarAttribute($value) {
+        return $value ?? 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png';
+    }
 }

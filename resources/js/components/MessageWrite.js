@@ -1,11 +1,49 @@
 import React, {Component} from 'react';
 
 export default class MessageWrite extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            _token: document.getElementById('token').getAttribute('content')
+        }
+
+    }
+
     render () {
         return (
             <div className="chat-write mt-3">
-                <textarea className="form-control" name="" id="" cols="30" rows="10"></textarea>
+                <input id='message-editor' className="form-control" name="message"
+                       onKeyPress={(e) => this.sendMessage(e, this)}/>
             </div>
         )
+    }
+
+    sendMessage(event, self) {
+        if (event.which != 13 && event.keyCode != 13) {
+            return;
+        }
+        let content = document.getElementById('message-editor').value;
+        document.getElementById('message-editor').value = '';
+        let token = document.getElementById('token').getAttribute('content');
+        fetch('/send-message', {
+            method: 'post',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json, text-plain, */*",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-TOKEN": token
+            },
+            body: JSON.stringify({
+                message: content
+            })
+        })
+            .then(function (res) {
+                return res.json()
+            }).then(function (data) {
+            if (data.status == 200) {
+                let message = data.data.message;
+                self.props.addMessage(message);
+            }
+        })
     }
 }

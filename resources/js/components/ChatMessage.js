@@ -2,14 +2,27 @@ import React, { Component } from 'react';
 import ChatAvatar from "./ChatAvatar";
 
 export default class ChatMessage extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            message: this.props.message
+        }
+
+    }
     render(){
         return (
-            <div className="media mt-2 border-info border px-1 py-3">
-                <ChatAvatar />
+            <div id={this.props.messagegId} className="media mt-2 border-info border px-1 py-3">
+                <ChatAvatar user={this.state.message.user}/>
                 <div className="media-body">
-                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante
-                    sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce
-                    condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                    <div>
+                        {this.state.message.content}
+                    </div>
+                    <i style={{
+                        fontSize: 10 + 'px'
+                    }}>
+                        {this.state.message.created_at}
+                    </i>
                 </div>
             </div>
         )

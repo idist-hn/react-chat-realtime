@@ -61698,9 +61698,9 @@ function (_Component) {
     key: "render",
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-        src: "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png",
+        src: this.props.user.avatar,
         className: "mr-3",
-        alt: "...",
+        alt: this.props.user.name,
         style: {
           width: 30 + 'px',
           borderRadius: 100 + "%"
@@ -61740,9 +61740,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -61757,19 +61757,20 @@ var ChatComposer =
 function (_Component) {
   _inherits(ChatComposer, _Component);
 
-  function ChatComposer() {
+  function ChatComposer(props) {
+    var _this;
+
     _classCallCheck(this, ChatComposer);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(ChatComposer).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(ChatComposer).call(this, props));
+    _this.addMessage = _this.addMessage.bind(_assertThisInitialized(_this));
+    _this.state = {
+      messages: []
+    };
+    return _this;
   }
 
   _createClass(ChatComposer, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var chat_messages = document.getElementById('chat-messages');
-      if (chat_messages) chat_messages.scrollTop = chat_messages.scrollHeight;
-    }
-  }, {
     key: "render",
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -61781,7 +61782,49 @@ function (_Component) {
       }, "Room VNP"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "chat-messages",
         className: "chat-messages card-body"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ChatMessage__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ChatMessage__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ChatMessage__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ChatMessage__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ChatMessage__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ChatMessage__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ChatMessage__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ChatMessage__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ChatMessage__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ChatMessage__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ChatMessage__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ChatMessage__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ChatMessage__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ChatMessage__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ChatMessage__WEBPACK_IMPORTED_MODULE_2__["default"], null))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MessageWrite__WEBPACK_IMPORTED_MODULE_1__["default"], null));
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "text-center"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "alert aler-info"
+      }, " Room has no message before!")), this.state.messages.map(function (value, index) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ChatMessage__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          messagegId: value.id,
+          message: value
+        });
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MessageWrite__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        addMessage: this.addMessage
+      }));
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var self = this;
+      fetch('/get-messages').then(function (res) {
+        return res.json();
+      }).then(function (data) {
+        var test = self.state.messages;
+        var messages = data.data.messages;
+        test = test.concat(messages);
+        self.setState({
+          messages: test
+        });
+        self.scrollToBottom();
+      });
+    }
+  }, {
+    key: "scrollToBottom",
+    value: function scrollToBottom() {
+      var chat_messages = document.getElementById('chat-messages');
+      if (chat_messages) chat_messages.scrollTop = chat_messages.scrollHeight;
+    }
+  }, {
+    key: "addMessage",
+    value: function addMessage(message) {
+      this.state.messages.push(message);
+      this.setState({
+        messages: this.state.messages
+      });
+      this.scrollToBottom();
     }
   }]);
 
@@ -61831,20 +61874,33 @@ var ChatMessage =
 function (_Component) {
   _inherits(ChatMessage, _Component);
 
-  function ChatMessage() {
+  function ChatMessage(props) {
+    var _this;
+
     _classCallCheck(this, ChatMessage);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(ChatMessage).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(ChatMessage).call(this, props));
+    _this.state = {
+      message: _this.props.message
+    };
+    return _this;
   }
 
   _createClass(ChatMessage, [{
     key: "render",
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: this.props.messagegId,
         className: "media mt-2 border-info border px-1 py-3"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ChatAvatar__WEBPACK_IMPORTED_MODULE_1__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ChatAvatar__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        user: this.state.message.user
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "media-body"
-      }, "Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus."));
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, this.state.message.content), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        style: {
+          fontSize: 10 + 'px'
+        }
+      }, this.state.message.created_at)));
     }
   }]);
 
@@ -61892,24 +61948,63 @@ var MessageWrite =
 function (_Component) {
   _inherits(MessageWrite, _Component);
 
-  function MessageWrite() {
+  function MessageWrite(props) {
+    var _this;
+
     _classCallCheck(this, MessageWrite);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(MessageWrite).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(MessageWrite).call(this, props));
+    _this.state = {
+      _token: document.getElementById('token').getAttribute('content')
+    };
+    return _this;
   }
 
   _createClass(MessageWrite, [{
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "chat-write mt-3"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        id: "message-editor",
         className: "form-control",
-        name: "",
-        id: "",
-        cols: "30",
-        rows: "10"
+        name: "message",
+        onKeyPress: function onKeyPress(e) {
+          return _this2.sendMessage(e, _this2);
+        }
       }));
+    }
+  }, {
+    key: "sendMessage",
+    value: function sendMessage(event, self) {
+      if (event.which != 13 && event.keyCode != 13) {
+        return;
+      }
+
+      var content = document.getElementById('message-editor').value;
+      document.getElementById('message-editor').value = '';
+      var token = document.getElementById('token').getAttribute('content');
+      fetch('/send-message', {
+        method: 'post',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json, text-plain, */*",
+          "X-Requested-With": "XMLHttpRequest",
+          "X-CSRF-TOKEN": token
+        },
+        body: JSON.stringify({
+          message: content
+        })
+      }).then(function (res) {
+        return res.json();
+      }).then(function (data) {
+        if (data.status == 200) {
+          var message = data.data.message;
+          self.props.addMessage(message);
+        }
+      });
     }
   }]);
 
