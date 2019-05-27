@@ -67,7 +67,9 @@
 </head>
 <body>
 <div id="app">
+    <chat-composer>
 
+    </chat-composer>
 </div>
 </body>
 <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>

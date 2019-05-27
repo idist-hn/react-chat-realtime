@@ -12,4 +12,21 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-require('./components/Example');
+import ReactDOM from 'react-dom';
+import React, { Component } from 'react';
+
+import ChatComposer from './components/ChatComposer';
+
+class Layout extends Component {
+    render (){
+        return (
+            <div className="container">
+                <ChatComposer />
+            </div>
+        )
+    }
+}
+if (document.getElementById('app')) {
+    ReactDOM.render(<Layout />, document.getElementById('app'));
+}
+
