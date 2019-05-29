@@ -12,7 +12,7 @@ export default class MessageWrite extends Component {
     render () {
         return (
             <div className="chat-write mt-3">
-                <input id='message-editor' className="form-control" name="message"
+                <input id='message-editor' className="form-control" name="message" placeholder="Type your mess..."
                        onKeyPress={(e) => this.sendMessage(e, this)}/>
             </div>
         )
@@ -24,6 +24,7 @@ export default class MessageWrite extends Component {
         }
         let content = document.getElementById('message-editor').value;
         document.getElementById('message-editor').value = '';
+
         let token = document.getElementById('token').getAttribute('content');
         fetch('/send-message', {
             method: 'post',
@@ -41,8 +42,7 @@ export default class MessageWrite extends Component {
                 return res.json()
             }).then(function (data) {
             if (data.status == 200) {
-                let message = data.data.message;
-                self.props.addMessage(message);
+                console.log("Send ok");
             }
         })
     }

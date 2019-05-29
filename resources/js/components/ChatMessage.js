@@ -12,7 +12,7 @@ export default class ChatMessage extends Component {
     }
     render(){
         return (
-            <div id={this.props.messagegId} className="media mt-2 border-info border px-1 py-3">
+            <div id={this.props.messagegId} className="message media mt-2 border-info border px-1 py-3">
                 <ChatAvatar user={this.state.message.user}/>
                 <div className="media-body">
                     <div>

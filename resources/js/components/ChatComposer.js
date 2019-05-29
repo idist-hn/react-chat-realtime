@@ -8,23 +8,58 @@ export default class ChatComposer extends Component {
         super(props);
         this.addMessage = this.addMessage.bind(this);
         this.state = {
-            messages: []
-        }
+            messages: [],
+            room: {
+                members: []
+            }
+        };
+
+        echo.join('chatroom')
+            .here((members) => {
+                this.setState({
+                    room: {
+                        members: members
+                    }
+                })
+            })
+            .joining((member) => {
+                let members = this.state.room.members;
+                members.push(member);
+                this.setState({
+                    room: {
+                        members: members
+                    }
+                })
+            })
+            .leaving((member) => {
+                let members = this.state.room.members.filter(m => m != member);
+                this.setState({
+                    room: {
+                        members: members
+                    }
+                })
+            })
+            .listen('SentMessage', (message) => {
+                this.addMessage(message.message)
+            });
+
+
     }
+
 
     render() {
         return (
             <div className="col-md-12 pt-3">
                 <div className="card box-chat">
                     <div className="card-header">
-                        Room VNP
+                        Room VNP - {this.state.room.members.length} users
                     </div>
                     <div id='chat-messages' className="chat-messages card-body">
                         <div className="text-center">
                             <i className="alert aler-info"> Room has no message before!</i>
                         </div>
                         {this.state.messages.map((value, index) => (
-                            <ChatMessage messagegId={value.id} message={value}/>))}
+                            <ChatMessage index={index} messagegId={value.id} message={value}/>))}
                     </div>
                 </div>
                 <MessageWrite addMessage={this.addMessage}/>
@@ -42,9 +77,9 @@ export default class ChatComposer extends Component {
             test = test.concat(messages);
             self.setState({
                 messages: test
-            })
+            });
             self.scrollToBottom()
-        })
+        });
     }
 
     scrollToBottom() {
@@ -59,6 +94,7 @@ export default class ChatComposer extends Component {
             messages: this.state.messages
         })
         this.scrollToBottom()
+
     }
 
 }

@@ -13,20 +13,31 @@ require('./bootstrap');
  */
 
 import ReactDOM from 'react-dom';
-import React, { Component } from 'react';
-
+import React, {Component} from 'react';
 import ChatComposer from './components/ChatComposer';
+import Echo from "laravel-echo";
+
+window.Pusher = require('pusher-js');
+
+Pusher.logToConsole = false;
+
+window.echo = new Echo({
+    broadcaster: 'pusher',
+    key: 'f5f8045ab09bc508496e',
+    cluster: 'ap1',
+    forceTLS: true
+});
 
 class Layout extends Component {
-    render (){
+    render() {
         return (
             <div className="container">
-                <ChatComposer />
+                <ChatComposer/>
             </div>
         )
     }
 }
-if (document.getElementById('app')) {
-    ReactDOM.render(<Layout />, document.getElementById('app'));
-}
 
+if (document.getElementById('app')) {
+    ReactDOM.render(<Layout/>, document.getElementById('app'));
+}

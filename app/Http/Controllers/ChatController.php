@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SentMessage;
 use App\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +30,9 @@ class ChatController extends Controller
         $message->save();
 
         $message = Message::with('user')->find($message->id);
+
+        // Announce that a new message has been posted
+        broadcast(new SentMessage($message->user, $message))->toOthers();
 
         return [
             'status' => 200,
