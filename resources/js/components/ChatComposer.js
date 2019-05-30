@@ -9,77 +9,47 @@ export default class ChatComposer extends Component {
         this.addMessage = this.addMessage.bind(this);
         this.state = {
             messages: [],
-            room: {
-                members: []
-            }
+            members: []
         };
-
-        echo.join('chatroom')
+        echo.join('chatroom-' + this.props.match.params.id)
             .here((members) => {
                 this.setState({
-                    room: {
-                        members: members
-                    }
-                })
+                    members: members
+                });
             })
             .joining((member) => {
-                let members = this.state.room.members;
+                let members = this.state.members;
                 members.push(member);
                 this.setState({
-                    room: {
-                        members: members
-                    }
+                    members: members
                 })
             })
             .leaving((member) => {
-                let members = this.state.room.members.filter(m => m != member);
+                let members = this.state.members.filter(m => m != member);
                 this.setState({
-                    room: {
-                        members: members
-                    }
+                    members: members
                 })
             })
-            .listen('SentMessage', (message) => {
-                this.addMessage(message.message)
-            });
-
-
+            .listen('SentMessage', this.addMessage);
     }
 
-
-    render() {
-        return (
-            <div className="col-md-12 pt-3">
-                <div className="card box-chat">
-                    <div className="card-header">
-                        Room VNP - {this.state.room.members.length} users
-                    </div>
-                    <div id='chat-messages' className="chat-messages card-body">
-                        <div className="text-center">
-                            <i className="alert aler-info"> Room has no message before!</i>
-                        </div>
-                        {this.state.messages.map((value, index) => (
-                            <ChatMessage index={index} messagegId={value.id} message={value}/>))}
-                    </div>
-                </div>
-                <MessageWrite addMessage={this.addMessage}/>
-            </div>
-        );
-    }
 
     componentDidMount() {
         const self = this;
-        fetch('/get-messages').then(function (res) {
+        fetch('/get-messages?roomId=' + this.props.match.params.id)
+            .then(function (res) {
+
             return res.json();
-        }).then(function (data) {
-            let test = self.state.messages;
-            let messages = data.data.messages;
-            test = test.concat(messages);
-            self.setState({
-                messages: test
+            })
+            .then(function (data) {
+                let test = self.state.messages;
+                let messages = data.data.messages;
+                test = test.concat(messages);
+                self.setState({
+                    messages: test
+                });
+                self.scrollToBottom()
             });
-            self.scrollToBottom()
-        });
     }
 
     scrollToBottom() {
@@ -89,12 +59,43 @@ export default class ChatComposer extends Component {
     }
 
     addMessage(message) {
-        this.state.messages.push(message);
-        this.setState({
-            messages: this.state.messages
-        })
-        this.scrollToBottom()
 
+        console.log("sent message", message);
+        let messages = this.state.messages;
+        messages.push(message.message);
+
+        this.setState({
+            messages: messages
+        })
+
+        console.log(this.state.messages)
+
+        this.scrollToBottom()
     }
+
+
+    render() {
+        return (
+            <div className="container">
+                <div className="col-md-12 pt-3">
+                    <div className="card box-chat">
+                        <div className="card-header">
+                            Room VNP - {this.state.members.length} users
+                        </div>
+                        <div id='chat-messages' className="chat-messages card-body">
+                            <div className="text-center">
+                                <i className="alert aler-info"> Room has no message before!</i>
+                            </div>
+                            {this.state.messages.map((value, index) => (
+                                <ChatMessage key={"message-" + value.id} index={index} messagegId={value.id}
+                                             message={value}/>))}
+                        </div>
+                    </div>
+                    <MessageWrite roomID={this.props.match.params.id} addMessage={this.addMessage}/>
+                </div>
+            </div>
+        );
+    }
+
 
 }

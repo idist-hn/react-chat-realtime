@@ -4,6 +4,9 @@
  * building robust, powerful web applications using React + Laravel.
  */
 
+
+import React from "react";
+
 require('./bootstrap');
 
 /**
@@ -13,31 +16,9 @@ require('./bootstrap');
  */
 
 import ReactDOM from 'react-dom';
-import React, {Component} from 'react';
-import ChatComposer from './components/ChatComposer';
-import Echo from "laravel-echo";
 
-window.Pusher = require('pusher-js');
-
-Pusher.logToConsole = false;
-
-window.echo = new Echo({
-    broadcaster: 'pusher',
-    key: 'f5f8045ab09bc508496e',
-    cluster: 'ap1',
-    forceTLS: true
-});
-
-class Layout extends Component {
-    render() {
-        return (
-            <div className="container">
-                <ChatComposer/>
-            </div>
-        )
-    }
-}
+import Application from "./components/Application";
 
 if (document.getElementById('app')) {
-    ReactDOM.render(<Layout/>, document.getElementById('app'));
+    ReactDOM.render(<Application/>, document.getElementById('app'));
 }

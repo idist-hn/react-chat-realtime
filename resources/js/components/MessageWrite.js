@@ -35,7 +35,8 @@ export default class MessageWrite extends Component {
                 "X-CSRF-TOKEN": token
             },
             body: JSON.stringify({
-                message: content
+                message: content,
+                roomId: this.props.roomID
             })
         })
             .then(function (res) {

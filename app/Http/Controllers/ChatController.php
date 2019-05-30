@@ -13,8 +13,9 @@ class ChatController extends Controller
         $this->middleware('auth');
     }
 
-    public function getMessages() {
-        $messages = Message::with('user')->get();
+    public function getMessages(Request $request) {
+
+        $messages = Message::where('room_id', $request->roomId)->with('user')->get();
         return ([
             'status' => 200,
             'data' => [
@@ -26,6 +27,7 @@ class ChatController extends Controller
     public function sendMessage(Request $request) {
         $message = new Message();
         $message->content = $request->message;
+        $message->room_id = $request->roomId;
         $message->user_id = Auth::id();
         $message->save();
 

@@ -37,6 +37,6 @@ class SentMessage implements ShouldBroadcast
      * @return \Illuminate\Broadcasting\Channel|array
      */
     public function broadcastOn() {
-        return new PresenceChannel('chatroom');
+        return new PresenceChannel('chatroom-' . $this->message->room_id);
     }
 }
