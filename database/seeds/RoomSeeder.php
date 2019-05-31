@@ -12,12 +12,10 @@ class RoomSeeder extends Seeder
     public function run()
     {
         \App\Room::create([
-            [
                 'name' => 'Default'
-            ],
-            [
+        ]);
+        \App\Room::create([
                 'name' => 'VNP Group'
-            ]
         ]);
     }
 }
